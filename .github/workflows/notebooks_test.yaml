@@ -32,3 +32,5 @@ jobs:
       - name: Run notebooks as a test
         run: |
             pytest --nbmake "./tutorials/"
+        env:
+          SHAPED_KEY: ${{ secrets.SHAPED_API_KEY_NOTEBOOKS_TEST }}
