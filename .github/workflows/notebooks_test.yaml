@@ -1,10 +1,6 @@
 # Runs notebooks as a test nighly.
 name: Notebooks nightly test
 
-permissions:
-  id-token: write
-  contents: read
-
 on:
   schedule:
     - cron: '0 6 * * *' #  6AM UTC
@@ -20,7 +16,6 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Setup Python
-        if: "${{ inputs.deploy_dev }} || ${{ github.event_name == 'schedule' }}"
         uses: actions/setup-python@v2
         with:
           python-version: "3.9.12"
