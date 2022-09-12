@@ -1,5 +1,5 @@
 # Runs notebooks as a test nighly.
-name: Codebuild script
+name: Notebooks nightly test
 
 permissions:
   id-token: write
