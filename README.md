@@ -4,4 +4,4 @@ This repository holds several tutorials on how to use Shaped across different da
 
 | Dataset      | Connector |  Link |
 | ----------- | ----------- | ----------- |
-| Amazon      | Postgress   | [Link ](/tutorials/Amazon_Ratings.ipynb) |
+| Amazon      | Postgresql   | [Link ](/tutorials/Amazon_Ratings.ipynb) |
