@@ -7,8 +7,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  deploy_dev:
-      name: Dev deployment
+  notebooks_test:
+      name: Test notebooks
       runs-on: ubuntu-latest
 
       steps:
