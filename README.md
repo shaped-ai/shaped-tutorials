@@ -4,5 +4,5 @@ This repository holds several tutorials on how to use Shaped across different da
 
 | Dataset      | Connector |  Link |
 | ----------- | ----------- | ----------- |
-| Amazon      | Postgresql   | [Link ](/tutorials/Postgres-based Amazon Ratings Tutorial.ipynb) |
-| Movielens      | S3   | [Link ](/tutorials/S3-based Movielens Tutorial.ipynb) |
+| Amazon      | Postgresql   | [Link ](tutorials/Postgres-based+Amazon+Ratings+Tutorial.ipynb) |
+| Movielens      | S3   | [Link ](tutorials/S3-based+Movielens+Tutorial.ipynb) |
