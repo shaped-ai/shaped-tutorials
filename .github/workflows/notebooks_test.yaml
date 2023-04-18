@@ -1,4 +1,4 @@
-# Runs notebooks as a test nighly.
+# Runs notebooks as a nightly test
 name: Notebooks nightly test
 
 on:
@@ -28,4 +28,9 @@ jobs:
         run: |
             pytest --nbmake "./tutorials/"
         env:
-          SHAPED_KEY: ${{ secrets.SHAPED_API_KEY_NOTEBOOKS_TEST }}
+          YOUR_API_KEY: ${{ secrets.SHAPED_API_KEY_NOTEBOOKS_TEST }}
+          POSTGRES_HOST: ${{ secrets.POSTGRES_HOST_NOTEBOOKS_TEST }} 
+          POSTGRES_PORT: ${{ secrets.POSTGRES_PORT_NOTEBOOKS_TEST }}
+          POSTGRES_DATABASE: ${{ secrets.POSTGRES_DATABASE_NOTEBOOKS_TEST }}
+          POSTGRES_USER: ${{ secrets.POSTGRES_USER_NOTEBOOKS_TEST }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD_NOTEBOOKS_TEST }}
