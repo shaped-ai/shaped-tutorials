@@ -22,7 +22,7 @@ jobs:
 
       - name: Setup requirements
         run: |
-            python -m pip install pytest nbmake pytest-xdist
+            python -m pip install pytest nbmake pytest-xdist shaped
 
       - name: Run notebooks as a test
         run: |
@@ -34,3 +34,12 @@ jobs:
           TEST_POSTGRES_DATABASE: ${{ secrets.POSTGRES_DATABASE_NOTEBOOKS_TEST }}
           TEST_POSTGRES_USER: ${{ secrets.POSTGRES_USER_NOTEBOOKS_TEST }}
           TEST_POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD_NOTEBOOKS_TEST }}
+
+      - name: Clean up notebook artifacts
+        run: |
+          shaped init --api-key ${{ secrets.SHAPED_API_KEY_NOTEBOOKS_TEST }}
+          models=$(shaped list-models)
+          
+          datasets=$(shaped list-dataset)
+
+          rm -r notebook_assets
