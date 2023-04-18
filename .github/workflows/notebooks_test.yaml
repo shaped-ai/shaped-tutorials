@@ -28,4 +28,4 @@ jobs:
         run: |
             pytest --nbmake "./tutorials/"
         env:
-          SHAPED_KEY: ${{ secrets.SHAPED_API_KEY_NOTEBOOKS_TEST }}
+          SHAPED_API_KEY: ${{ secrets.SHAPED_API_KEY_NOTEBOOKS_TEST }}
