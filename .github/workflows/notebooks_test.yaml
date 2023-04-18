@@ -22,11 +22,11 @@ jobs:
 
       - name: Setup requirements
         run: |
-            python -m pip install pytest nbmake
+            python -m pip install pytest nbmake pytest-xdist
 
       - name: Run notebooks as a test
         run: |
-            pytest --nbmake "./tutorials/"
+            pytest -n=auto --nbmake "./tutorials/"
         env:
           TEST_SHAPED_API_KEY: ${{ secrets.SHAPED_API_KEY_NOTEBOOKS_TEST }}
           TEST_POSTGRES_HOST: ${{ secrets.POSTGRES_HOST_NOTEBOOKS_TEST }} 
