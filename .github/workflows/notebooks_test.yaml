@@ -72,7 +72,7 @@ jobs:
           echo "active_datasets=$active_datasets" >> $GITHUB_ENV
 
       - name: Check cleanup was successful
-        if: ${#env.active_models[@]} -gt 0 | ${#env.active_datasets[@]} -gt 0
+        if: env.active_models[0] != null || env.active_datasets[0] != null
         uses: actions/github-script@v3
         with:
           script: |
