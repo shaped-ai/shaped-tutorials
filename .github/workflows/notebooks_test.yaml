@@ -36,10 +36,49 @@ jobs:
           TEST_POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD_NOTEBOOKS_TEST }}
 
       - name: Clean up notebook artifacts
+        id: cleanup
         run: |
           shaped init --api-key ${{ secrets.SHAPED_API_KEY_NOTEBOOKS_TEST }}
-          models=$(shaped list-models)
           
-          datasets=$(shaped list-dataset)
+          models=($(shaped list-models | grep "model_name:" | cut -d' ' -f3 ))
+          for model in "${models[@]}"
+          do
+            shaped delete-model --model-name=$model
+          done
+          
+          datasets=($(shaped list-datasets | grep "name:" | cut -d' ' -f3 ))
+          for dataset in "${datasets[@]}"
+          do
+            shaped delete-dataset --dataset-name=$dataset
+          done
 
-          rm -r notebook_assets
+          rm -r ./tutorials/model_assets
+
+          # Assert cleanup was successful.
+          models=$(shaped list-models | awk '/model_name/{name=$3}/status/{print name":"$2}')
+          for element in "${models[@]}"; do
+            name=$(echo "$element" | cut -d':' -f1);
+            status=$(echo "$element" | cut -d':' -f2);
+            if [ "$status" != "DESTROYING" ]; then
+              echo "Error: $name has status $status";
+              exit 1
+            fi
+          done
+          
+          datasets=$(shaped list-datasets | awk '/name/{name=$3}/status/{print name":"$2}')
+          for element in "${datasets[@]}"; do
+            name=$(echo "$element" | cut -d':' -f1);
+            status=$(echo "$element" | cut -d':' -f2);
+            if [ "$status" != "DESTROYING" ]; then
+              echo "Error: $name has status $status";
+              exit 1
+            fi
+          done
+
+      - name: A/B Check
+        if: ${{ envA }} != ${{ envB }}
+        uses: actions/github-script@v3
+        with:
+          script: |
+              core.setFailed('')
+          
