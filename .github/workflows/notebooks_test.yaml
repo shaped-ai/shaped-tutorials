@@ -26,7 +26,7 @@ jobs:
 
       - name: Run notebooks as a test
         run: |
-            pytest -n=auto --nbmake "./tutorials/"
+            pytest --nbmake "./tutorials/"
         env:
           TEST_SHAPED_API_KEY: ${{ secrets.SHAPED_API_KEY_NOTEBOOKS_TEST }}
           TEST_POSTGRES_HOST: ${{ secrets.POSTGRES_HOST_NOTEBOOKS_TEST }} 
@@ -36,7 +36,7 @@ jobs:
           TEST_POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD_NOTEBOOKS_TEST }}
 
       - name: Clean up notebook artifacts
-        id: cleanup
+        if: failure() || cancelled()
         run: |
           shaped init --api-key ${{ secrets.SHAPED_API_KEY_NOTEBOOKS_TEST }}
           
@@ -54,7 +54,9 @@ jobs:
 
           rm -r ./tutorials/notebook_assets
 
-          # Assert cleanup was successful.
+      - name: Fetch data to check cleanup was successful
+        if: always()
+        run: |
           models=$(shaped list-models | awk '/model_name/{name=$3}/status/{print name":"$2}')
           active_models=()
           for element in "${models[@]}"; do
@@ -72,7 +74,7 @@ jobs:
           echo "active_datasets=$active_datasets" >> $GITHUB_ENV
 
       - name: Check cleanup was successful
-        if: env.active_models[0] != null || env.active_datasets[0] != null
+        if: always() && (env.active_models[0] != null || env.active_datasets[0] != null)
         uses: actions/github-script@v3
         with:
           script: |
