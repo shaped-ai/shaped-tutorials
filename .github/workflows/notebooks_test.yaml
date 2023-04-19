@@ -52,33 +52,29 @@ jobs:
             shaped delete-dataset --dataset-name=$dataset
           done
 
-          rm -r ./tutorials/model_assets
+          rm -r ./tutorials/notebook_assets
 
           # Assert cleanup was successful.
           models=$(shaped list-models | awk '/model_name/{name=$3}/status/{print name":"$2}')
+          active_models=()
           for element in "${models[@]}"; do
-            name=$(echo "$element" | cut -d':' -f1);
-            status=$(echo "$element" | cut -d':' -f2);
-            if [ "$status" != "DESTROYING" ]; then
-              echo "Error: $name has status $status";
-              exit 1
+            status="${element#*:}"
+            if [[ "$status" != "DESTROYING" ]]; then
+                active_datasets+=("$element")
             fi
           done
           
-          datasets=$(shaped list-datasets | awk '/name/{name=$3}/status/{print name":"$2}')
-          for element in "${datasets[@]}"; do
-            name=$(echo "$element" | cut -d':' -f1);
-            status=$(echo "$element" | cut -d':' -f2);
-            if [ "$status" != "DESTROYING" ]; then
-              echo "Error: $name has status $status";
-              exit 1
-            fi
-          done
+          active_datasets=$(shaped list-datasets | awk '/name/{name=$3}/status/{print name":"$2}')
+          # Datasets don't have a DESTROYING status so we dont need to filter for it.
 
-      - name: A/B Check
-        if: ${{ envA }} != ${{ envB }}
+          # Set the values to be used in the following step.
+          echo "active_models=$active_models" >> $GITHUB_ENV
+          echo "active_datasets=$active_datasets" >> $GITHUB_ENV
+
+      - name: Check cleanup was successful
+        if: ${#env.active_models[@]} -gt 0 | ${#env.active_datasets[@]} -gt 0
         uses: actions/github-script@v3
         with:
           script: |
-              core.setFailed('')
+              core.setFailed('Not all models and/or datasets were deleted properly. active_models={env.active_models}. active_datasets={env.active_datasets}')
           
