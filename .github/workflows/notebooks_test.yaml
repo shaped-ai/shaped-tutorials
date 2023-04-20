@@ -1,4 +1,4 @@
-# Runs notebooks as a test nighly.
+# Runs notebooks as a nightly test
 name: Notebooks nightly test
 
 on:
@@ -22,10 +22,62 @@ jobs:
 
       - name: Setup requirements
         run: |
-            python -m pip install pytest nbmake
+            python -m pip install pytest nbmake pytest-xdist shaped
 
       - name: Run notebooks as a test
         run: |
             pytest --nbmake "./tutorials/"
         env:
-          SHAPED_KEY: ${{ secrets.SHAPED_API_KEY_NOTEBOOKS_TEST }}
+          TEST_SHAPED_API_KEY: ${{ secrets.SHAPED_API_KEY_NOTEBOOKS_TEST }}
+          TEST_POSTGRES_HOST: ${{ secrets.POSTGRES_HOST_NOTEBOOKS_TEST }} 
+          TEST_POSTGRES_PORT: ${{ secrets.POSTGRES_PORT_NOTEBOOKS_TEST }}
+          TEST_POSTGRES_DATABASE: ${{ secrets.POSTGRES_DATABASE_NOTEBOOKS_TEST }}
+          TEST_POSTGRES_USER: ${{ secrets.POSTGRES_USER_NOTEBOOKS_TEST }}
+          TEST_POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD_NOTEBOOKS_TEST }}
+
+      - name: Clean up notebook artifacts
+        if: failure() || cancelled()
+        run: |
+          shaped init --api-key ${{ secrets.SHAPED_API_KEY_NOTEBOOKS_TEST }}
+          
+          models=($(shaped list-models | grep "model_name:" | cut -d' ' -f3 ))
+          for model in "${models[@]}"
+          do
+            shaped delete-model --model-name=$model
+          done
+          
+          datasets=($(shaped list-datasets | grep "name:" | cut -d' ' -f3 ))
+          for dataset in "${datasets[@]}"
+          do
+            shaped delete-dataset --dataset-name=$dataset
+          done
+
+          rm -r ./tutorials/notebook_assets
+
+      - name: Fetch data to check cleanup was successful
+        if: always()
+        run: |
+          models=$(shaped list-models | awk '/model_name/{name=$3}/status/{print name":"$2}')
+          active_models=$(echo "$models" | grep -v ":DESTROYING")
+          
+          active_datasets=$(shaped list-datasets | awk '/name/{name=$3}/status/{print name":"$2}')
+          # Datasets don't have a DESTROYING status so we dont need to filter for it.
+
+          echo active_models: $active_models
+          echo active_datasets: $active_datasets
+          
+          # Set the values to be used in the following step.
+          if [ -z "$active_models" ] && [ -z "$active_datasets" ] ; then
+            echo "Cleanup was successful"
+            echo "cleanup_successful=true" >> $GITHUB_ENV
+          else
+            echo "Cleanup was not successful"
+            echo "cleanup_successful=false" >> $GITHUB_ENV
+          fi
+          
+      - name: Fail if cleanup failed
+        if: always() && env.cleanup_successful == 'false'
+        uses: actions/github-script@v3
+        with:
+          script: |
+              core.setFailed('Not all models and/or datasets were deleted properly')
