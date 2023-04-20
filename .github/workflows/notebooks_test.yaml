@@ -58,13 +58,7 @@ jobs:
         if: always()
         run: |
           models=$(shaped list-models | awk '/model_name/{name=$3}/status/{print name":"$2}')
-          active_models=()
-          for element in "${models[@]}"; do
-            status="${element#*:}"
-            if [[ "$status" != "DESTROYING" ]]; then
-                active_models+=("$element")
-            fi
-          done
+          active_models=$(echo "$models" | grep -v ":DESTROYING")
           
           active_datasets=$(shaped list-datasets | awk '/name/{name=$3}/status/{print name":"$2}')
           # Datasets don't have a DESTROYING status so we dont need to filter for it.
@@ -73,18 +67,17 @@ jobs:
           echo active_datasets: $active_datasets
           
           # Set the values to be used in the following step.
-          if [ "${#active_models[@]}" -gt 0 ] || [ "${#active_datasets[@]}" -gt 0 ] ; then
-            echo "Cleanup was not successful"
-            echo "cleanup_successful=false" >> $GITHUB_ENV
-          else
+          if [ -z "$active_models" ] && [ -z "$active_datasets" ] ; then
             echo "Cleanup was successful"
             echo "cleanup_successful=true" >> $GITHUB_ENV
+          else
+            echo "Cleanup was not successful"
+            echo "cleanup_successful=false" >> $GITHUB_ENV
           fi
-
+          
       - name: Fail if cleanup failed
         if: always() && env.cleanup_successful == 'false'
         uses: actions/github-script@v3
         with:
           script: |
               core.setFailed('Not all models and/or datasets were deleted properly')
-          
