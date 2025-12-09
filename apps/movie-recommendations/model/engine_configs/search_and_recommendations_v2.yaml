@@ -1,0 +1,34 @@
+version: v2
+name: movielens__simple_semantic_search_2
+data: 
+  item_dataset:
+    name: movies_2018_enriched
+    query: |
+      SELECT r.movie_id as item_id, r.movie_title as title, r.poster_url,
+      r.imdb_url_new as imdb_url, r.genres as genres, r.description as
+      description, r.interests as interests, r.release_date as release_date,
+      r.cast as cast, r.directors as directors, r.writers as writers FROM
+      movies_2018_enriched r
+  index:
+    embeddings: 
+      - name: metadata_embedding
+        encoder: 
+          model_name: sentence-transformers/all-MiniLM-L6-v2
+          item_fields: 
+            - title
+            - description
+            - genres
+            - description
+            - directors
+            - writers
+            - cast
+          type: hugging_face
+    search: 
+      item_fields: 
+        - title
+        - description
+        - genres
+        - description
+        - directors
+        - writers
+        - cast

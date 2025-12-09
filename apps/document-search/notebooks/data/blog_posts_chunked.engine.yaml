@@ -1,0 +1,13 @@
+version: v2
+name: blog_posts__simple_semantic_search_3
+data:
+  item_dataset:
+    name: blog_post_chunked
+  index:
+    search:
+      item_fields:
+      - name
+      - content
+      - author
+      - categories
+      - roles
