@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export const PoweredByBadge: React.FC = () => {
   return (
-    <div className="z-50 bg-white border border-gray-200 rounded-lg px-3 py-2 animate-glow">
+    <div className="z-50 bg-transparent sm:bg-white sm:border sm:border-gray-200 rounded-lg px-0 py-0 sm:px-3 sm:py-2 sm:animate-glow">
       <style jsx>{`
         @keyframes glow {
           0%, 100% {
@@ -20,15 +20,15 @@ export const PoweredByBadge: React.FC = () => {
         href="https://shaped.ai" 
         target="_blank" 
         rel="noopener noreferrer"
-        className="flex items-center gap-2 text-sm text-gray-700 hover:text-gray-900 transition-colors"
+        className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm text-slate-300 sm:text-gray-700 hover:text-white sm:hover:text-gray-900 active:text-white sm:active:text-gray-900 transition-colors touch-manipulation"
       >
-        <span>Powered by</span>
+        <span className="hidden sm:inline">Powered by</span>
         <Image 
           src="https://docs.shaped.ai/img/shaped-icon.svg" 
           alt="Shaped"
           width={20}
           height={20}
-          className="h-5 w-auto"
+          className="h-5 w-auto brightness-0 invert sm:brightness-100 sm:invert-0"
         />
       </a>
     </div>

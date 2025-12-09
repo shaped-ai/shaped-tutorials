@@ -7,7 +7,7 @@ const GitHubButton = () => {
       href="https://github.com/yuhgto/shaped-demos/document-search"
       target="_blank"
       rel="noopener noreferrer"
-      className="flex items-center justify-center w-10 h-10 bg-gray-900 hover:bg-gray-800 border border-gray-700 rounded-lg transition-colors"
+      className="flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 bg-transparent sm:bg-gray-900 hover:bg-gray-800 active:bg-gray-700 sm:border sm:border-gray-700 rounded-lg transition-colors touch-manipulation"
     >
       <Image
         src="/github-mark-white.svg"
@@ -22,7 +22,7 @@ const GitHubButton = () => {
 
 export const FloatingButtons = () => {
   return (
-    <div className="fixed bottom-6 right-6 flex flex-row items-center gap-3 z-50">
+    <div className="fixed bottom-4 left-1/2 -translate-x-1/2 sm:left-auto sm:translate-x-0 sm:bottom-6 sm:right-6 flex flex-row items-center gap-2 sm:gap-3 z-50">
       <GitHubButton />
       <PoweredByBadge />
     </div>
