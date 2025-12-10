@@ -44,9 +44,10 @@ jobs:
               continue-on-error: true
               run: |
                   echo "Creating engine from ${{ matrix.engine_config }}"
-                  echo $(pwd)
-                  echo $(ls -la)
+                  echo "Using engine config: $(cat apps/${{ matrix.engine_config }})"
                   shaped create-engine --file apps/${{ matrix.engine_config }}
             - name: Update engine
               run: |
+                  echo "Updating engine from ${{ matrix.engine_config }}"
+                  echo "Using engine config: $(cat apps/${{ matrix.engine_config }})"
                   shaped update-engine --file apps/${{ matrix.engine_config }}
