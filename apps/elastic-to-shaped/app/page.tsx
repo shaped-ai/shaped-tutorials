@@ -815,7 +815,7 @@ export default function Home() {
 
   const handleSubmit = async () => {
     if (!inputCode.trim()) return;
-    await makeSyncRequest();
+    await makeStreamingRequest();
   };
 
   const handleCopy = async () => {
