@@ -12,6 +12,7 @@ jobs:
     upload-engine:
         runs-on: ubuntu-latest
         strategy:
+            fail-fast: false
             matrix:
                 include:
                     - name: document-search
