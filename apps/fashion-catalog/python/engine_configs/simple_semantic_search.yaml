@@ -1,0 +1,15 @@
+version: v2
+name: hm__simple_semantic_search
+data: 
+    item_table: 
+        name: hm__articles
+        query: 
+            select * from hm__articles limit 100 
+index: 
+    lexical_search:
+        item_fields: 
+            - prod_name
+            - prod_type_name
+            - product_group_name
+            - colour_group_name
+            - department_name
