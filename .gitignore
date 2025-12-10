@@ -1,0 +1,31 @@
+# global gitignore 
+
+# No ENVs anywhere
+.env*
+.venv*
+*/.env*
+*/.venv*
+*/*/.env*
+*/*/.venv*
+*/*/*/.env*
+*/*/*/.venv*
+
+# no .next or .vercel
+*/.next
+*/.vercel
+*/*/.next
+*/*/.vercel
+.DS_Store
+*/.DS_Store
+*/**/.DS_Store
+
+# no data
+apps/*.jsonl
+apps/*/*.jsonl
+apps/*/*/*.jsonl
+apps/*.tsv
+apps/*/*.tsv
+apps/*/*/*.tsv
+apps/*.csv
+apps/*/*.csv
+apps/*/*/*.csv

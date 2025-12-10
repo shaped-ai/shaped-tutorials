@@ -1,0 +1,23 @@
+version: v2
+name: demo___blog_semantic_search
+data:
+  item_table:
+    type: query
+    query: select toDateTime(toInt64(created_at) / 1000) as created_at_datetime, item_id, author, categories, chunk_metadata, content, created_at, featured, main_image, name, popular, article_id, read_length_in_mins, release_date, roles, slug, updated_at, url from blog_post_chunked order by created_at_datetime asc
+index:
+  lexical_search:
+    item_fields:
+    - name
+    - content
+    - author
+    - categories
+    - roles
+  embeddings:
+    - name: content_embedding
+      encoder:
+        type: hugging_face
+        model_name: sentence-transformers/all-MiniLM-L6-v2
+        item_fields:
+          - name
+          - content
+          - roles

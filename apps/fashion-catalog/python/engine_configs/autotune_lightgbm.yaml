@@ -1,0 +1,25 @@
+version: v2
+name: hm__autotune_lightgbm
+data:
+  item_dataset:
+    name: hm__articles
+    query: select * EXCEPT (article_id), article_id as item_id from hm__articles
+  user_dataset: 
+    name: hm__customers
+    query: select * EXCEPT (customer_id), customer_id as user_id from hm__customers
+  interactions_dataset: 
+    name: hm__transactions
+    query: select * EXCEPT (article_id, customer_id), article_id as item_id, customer_id as user_id from hm__transactions
+  index:
+    search:
+      item_fields:
+        - prod_name
+        - prod_type_name
+        - product_group_name
+        - colour_group_name
+        - department_name
+training:
+  models:
+    - policy_type: lightgbm
+    - policies:
+        - lightgbm

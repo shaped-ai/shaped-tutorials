@@ -44,7 +44,7 @@ jobs:
             - name: Create engine
               continue-on-error: true
               run: |
-                  shaped create-engine --file ${{ matrix.app.engine-config }}
+                  shaped create-engine --file  ${{ matrix.engine-config }}
             - name: Update engine
               run: |
-                  shaped update-engine --file ${{ matrix.app.engine-config }}
+                  shaped update-engine --file  ${{ matrix.engine-config }}

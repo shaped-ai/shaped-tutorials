@@ -1,0 +1,21 @@
+name: shaped_blog_chunked
+schema_type: CUSTOM
+unique_keys:
+- id
+column_schema:
+  id: String
+  name: String
+  slug: String
+  main_image: String
+  roles: String
+  author: String
+  categories: String
+  read_length_in_mins: Float
+  popular: Bool
+  featured: Bool
+  created_at: DateTime
+  updated_at: DateTime
+  content: String
+  post_id: String
+  chunk_metadata: String
+  url: String

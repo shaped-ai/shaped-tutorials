@@ -1,0 +1,58 @@
+model:
+  name: movie_recommendations_with_imdb_v3
+  language_model_name: sentence-transformers/all-MiniLM-L6-v2
+  policy_configs:
+    embedding_policy:
+      pool_fn: mean
+      text_encoding: true
+      policy_type: item-content-similarity
+    scoring_policy:
+      learning_rate: 0.05
+      n_estimators: 1000
+      policy_type: lightgbm
+      objective: lambdarank
+  inference_config:
+    retriever_k_override: {}
+    retrieval_k: 300
+    query:
+      retrieve:
+        - limit: 300
+          name: popular
+          order_by:
+            order_type: COLUMN
+            columns:
+              - name: _derived_popular_rank
+        - limit: 50
+          name: cold_start
+          order_by:
+            order_type: COLUMN
+            columns:
+              - ascending: true
+                name: _derived_interaction_count
+        - limit: 300
+          name: trending
+          order_by:
+            order_type: COLUMN
+            columns:
+              - name: _derived_trending_rank
+        - limit: 300
+          name: knn
+          order_by:
+            order_type: SIMILARITY
+connectors:
+  - id: ratings_2008
+    name: ratings_2008
+    type: Dataset
+  - id: movies_2018_enriched
+    name: movies_2018_enriched
+    type: Dataset
+fetch:
+  events: >
+    SELECT r.userId as user_id, r.movieId as item_id, r.timestamp AS created_at,
+    r.rating AS label FROM ratings_2008 r
+  items: >
+    SELECT r.movie_id as item_id, r.movie_title as title, r.poster_url,
+    r.imdb_url_new as imdb_url, r.genres as genres, r.description as
+    description, r.interests as interests, r.release_date as release_date,
+    r.cast as cast, r.directors as directors, r.writers as writers FROM
+    movies_2018_enriched r
