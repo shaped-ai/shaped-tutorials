@@ -14,12 +14,12 @@ Built with ❤️‍🔥 by Shaped.
       <p>
         Search for Recsys articles in the Shaped blog using hybrid search.
       </p>
-    <br/>
     <b><a href="https://shaped-blog-search.vercel.app/">Live Demo</a></b>
-    <img src="assets/search-screenshot.png" style="width: 100%; aspect-ratio: 4/3; object-fit: cover; object-position: top;">
+    <br/>
     <details>
       <summary><b>📕 Description and Features</b></summary>
       <p>An example that shows how to do hybrid search using Shaped. Demonstrates how to implement a sentence transformer model combined with BM25 indexes to query using text content.</p>
+      <img src="assets/search-screenshot.png" style="width: 100%; aspect-ratio: 4/3; object-fit: cover; object-position: top;">
       <b>Use Cases</b><br/>
       <p>
         Search bar on a website, RAG (Retrieval-Augmented Generation) applications
@@ -34,12 +34,12 @@ Built with ❤️‍🔥 by Shaped.
   <td valign="top">
     <h2><a href="apps/elastic-to-shaped">Elastic to Shaped</a></h2>
     <p>Convert Elasticsearch queries into simpler Shaped queries.</p>
-    <br/>
     <b><a href="https://elastic-to-shaped.vercel.app">Live Demo</a></b>
-    <img src="assets/elastic-screenshot.png" style="width: 100%; aspect-ratio: 4/3; object-fit: cover; object-position: top;">
+    <br/>
     <details>
       <summary><b>📕 Description and Features</b></summary>
       <p>A migration assistant to convert Elastic queries to Shaped. Uses an LLM with context to convert Elastic DSL queries into ShapedQL, making it easy to migrate from Elasticsearch to Shaped.</p>
+      <img src="assets/elastic-screenshot.png" style="width: 100%; aspect-ratio: 4/3; object-fit: cover; object-position: top;">
       <b>Features</b><br/>
       <p>
         <code>Query Conversion</code>, <code>LLM Integration</code>, <code>Migration Tool</code>, <code>Elastic DSL</code>
@@ -67,12 +67,12 @@ Built with ❤️‍🔥 by Shaped.
   <td valign="top">
     <h2><a href="apps/movie-recommendations">Movie Recommendations</a></h2>
     <p>Netflix-style content carousels with recommendations powered by Shaped.</p>
-    <br/>
     <b><a href="https://movies.shaped.ai">Live Demo</a></b>
-    <img src="assets/movies-screenshot.png" style="width: 100%; aspect-ratio: 4/3; object-fit: cover; object-position: top;">
+    <br/>
     <details>
       <summary><b>📕 Description and Features</b></summary>
       <p>A complete movie recommendation system demonstrating personalized feeds, similar items, and personalization based on user interactions. Built with Next.js frontend and Shaped backend, showcasing how to retrieve personalized movie recommendations and track user interactions.</p>
+      <img src="assets/movies-screenshot.png" style="width: 100%; aspect-ratio: 4/3; object-fit: cover; object-position: top;">
       <b>Features</b><br/>
       <p>
         <code>Personalized Recommendations</code>, <code>Similar Items</code>, <code>User Interactions</code>, <code>MovieLens Dataset</code>, <code>Next.js</code>
