@@ -26,7 +26,6 @@ jobs:
                       engine_config: movie-recommendations/model/engine_configs/search_and_recommendations_v2.yaml
         defaults:
             run:
-                working-directory: ./apps
                 shell: bash
         steps:
             - name: Checkout
@@ -44,6 +43,9 @@ jobs:
             - name: Create engine
               continue-on-error: true
               run: |
+                  echo "Creating engine from ${{ matrix.engine_config }}"
+                  echo $(pwd)
+                  echo $(ls -la)
                   shaped create-engine --file apps/${{ matrix.engine_config }}
             - name: Update engine
               run: |
