@@ -12,21 +12,21 @@ jobs:
     upload-engine:
         runs-on: ubuntu-latest
         strategy:
+            fail-fast: false
             matrix:
-                app:
+                include:
                     - name: document-search
-                      engine-config: document-search/notebooks/blog_engine_config.yaml
+                      engine_config: document-search/notebooks/blog_engine_config.yaml
                     - name: fashion-catalog-semantic-search
-                      engine-config: fashion-catalog/python/engine_configs/simple_semantic_search.yaml
+                      engine_config: fashion-catalog/python/engine_configs/simple_semantic_search.yaml
                     - name: fashion-catalog-autotune
-                      engine-config: fashion-catalog/python/engine_configs/autotune_lightgbm.yaml
+                      engine_config: fashion-catalog/python/engine_configs/autotune_lightgbm.yaml
                     - name: movie-recommendations-v1
-                      engine-config: movie-recommendations/model/engine_configs/search_and_recommendations_v1.yaml
+                      engine_config: movie-recommendations/model/engine_configs/search_and_recommendations_v1.yaml
                     - name: movie-recommendations-v2
-                      engine-config: movie-recommendations/model/engine_configs/search_and_recommendations_v2.yaml
+                      engine_config: movie-recommendations/model/engine_configs/search_and_recommendations_v2.yaml
         defaults:
             run:
-                working-directory: ./apps
                 shell: bash
         steps:
             - name: Checkout
@@ -44,7 +44,11 @@ jobs:
             - name: Create engine
               continue-on-error: true
               run: |
-                  shaped create-engine --file  ${{ matrix.engine-config }}
+                  echo "Creating engine from ${{ matrix.engine_config }}"
+                  echo "Using engine config: $(cat apps/${{ matrix.engine_config }})"
+                  shaped create-engine --file apps/${{ matrix.engine_config }}
             - name: Update engine
               run: |
-                  shaped update-engine --file  ${{ matrix.engine-config }}
+                  echo "Updating engine from ${{ matrix.engine_config }}"
+                  echo "Using engine config: $(cat apps/${{ matrix.engine_config }})"
+                  shaped update-engine --file apps/${{ matrix.engine_config }}
