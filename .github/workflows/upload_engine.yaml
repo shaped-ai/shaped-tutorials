@@ -1,0 +1,50 @@
+# This workflow should use the engine-configs folder in each of the apps and upload the engine to shaped.
+
+name: Upload Engine
+
+on:
+    push:
+        branches:
+            - main
+    workflow_dispatch:
+
+jobs:
+    upload-engine:
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                app:
+                    - name: document-search
+                      engine-config: document-search/notebooks/blog_engine_config.yaml
+                    - name: fashion-catalog-semantic-search
+                      engine-config: fashion-catalog/python/engine_configs/simple_semantic_search.yaml
+                    - name: fashion-catalog-autotune
+                      engine-config: fashion-catalog/python/engine_configs/autotune_lightgbm.yaml
+                    - name: movie-recommendations-v1
+                      engine-config: movie-recommendations/model/engine_configs/search_and_recommendations_v1.yaml
+                    - name: movie-recommendations-v2
+                      engine-config: movie-recommendations/model/engine_configs/search_and_recommendations_v2.yaml
+        defaults:
+            run:
+                working-directory: ./apps
+                shell: bash
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+            - name: Setup Python
+              uses: actions/setup-python@v5
+              with:
+                  python-version: "3.11"
+            - name: Install dependencies
+              run: |
+                  pip install shaped
+            - name: Shaped init
+              run: |
+                  shaped init --api-key ${{ secrets.SHAPED_API_KEY }}
+            - name: Create engine
+              continue-on-error: true
+              run: |
+                  shaped create-engine --file ${{ matrix.app.engine-config }}
+            - name: Update engine
+              run: |
+                  shaped update-engine --file ${{ matrix.app.engine-config }}
