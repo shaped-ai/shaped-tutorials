@@ -28,3 +28,8 @@ apps/*.csv
 apps/*/*.csv
 apps/*/*/*.csv
 apps/*/*/*/*.csv
+apps/movie-recommendations/model/data/ml-latest-small/links.csv
+apps/movie-recommendations/model/data/ml-latest-small/movies.csv
+apps/movie-recommendations/model/data/ml-latest-small/ratings_2018.csv
+apps/movie-recommendations/model/data/ml-latest-small/tags.csv
+apps/movie-recommendations/model/data/processed/movie_posters_scraped.csv
