@@ -20,12 +20,11 @@
 */**/.DS_Store
 
 # no data
-apps/*.jsonl
-apps/*/*.jsonl
-apps/*/*/*.jsonl
+apps/**/*.jsonl
 apps/*.tsv
 apps/*/*.tsv
-apps/*/*/*.tsv
+apps/*/*/*/*.tsv
 apps/*.csv
 apps/*/*.csv
 apps/*/*/*.csv
+apps/*/*/*/*.csv
