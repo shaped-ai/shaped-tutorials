@@ -1,25 +1,61 @@
+# this model demonstrates autotuning a lightgbm model
 version: v2
-name: hm__autotune_lightgbm
+name: hm_recommendations_and_search
+
 data:
-  item_dataset:
-    name: hm__articles
-    query: select * EXCEPT (article_id), article_id as item_id from hm__articles
-  user_dataset: 
-    name: hm__customers
-    query: select * EXCEPT (customer_id), customer_id as user_id from hm__customers
-  interactions_dataset: 
-    name: hm__transactions
-    query: select * EXCEPT (article_id, customer_id), article_id as item_id, customer_id as user_id from hm__transactions
-  index:
-    search:
-      item_fields:
-        - prod_name
-        - prod_type_name
-        - product_group_name
-        - colour_group_name
-        - department_name
-training:
-  models:
-    - policy_type: lightgbm
-    - policies:
-        - lightgbm
+  item_table:
+    type: table
+    name: hm_articles
+
+  user_table:
+    type: table
+    name: hm_customers
+
+  interaction_table:
+    type: query
+    query: select *, '5' as label from hm_transactions
+  
+  schema_override:
+    item: 
+      id: item_id
+      features:
+        - name: image_url
+          type: Image
+
+index:
+  embeddings:
+    - name: image_embedding
+      encoder:
+        type: hugging_face
+        model_name: openai/clip-vit-base-patch32
+        item_fields:
+          - image_url
+    - name: text_content_embedding
+      encoder:
+        type: hugging_face
+        model_name: Alibaba-NLP/gte-modernbert-base
+        item_fields:
+          - prod_name
+          - index_name
+          - detail_desc
+          - section_name
+          - colour_group_name
+          - product_group_name
+          - graphical_appearance_name
+          - perceived_colour_value_name
+
+  lexical_search:
+    item_fields:
+      - prod_name
+      - index_name
+      - detail_desc
+      - section_name
+      - colour_group_name
+      - product_group_name
+      - graphical_appearance_name
+      - perceived_colour_value_name
+
+training: 
+  models: 
+    - name: lightgbm
+      policy_type: lightgbm

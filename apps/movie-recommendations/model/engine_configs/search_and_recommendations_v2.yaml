@@ -1,34 +1,49 @@
 version: v2
-name: movielens__simple_semantic_search_2
-data: 
-  item_dataset:
-    name: movies_2018_enriched
-    query: |
-      SELECT r.movie_id as item_id, r.movie_title as title, r.poster_url,
-      r.imdb_url_new as imdb_url, r.genres as genres, r.description as
-      description, r.interests as interests, r.release_date as release_date,
-      r.cast as cast, r.directors as directors, r.writers as writers FROM
-      movies_2018_enriched r
-  index:
-    embeddings: 
-      - name: metadata_embedding
-        encoder: 
-          model_name: sentence-transformers/all-MiniLM-L6-v2
-          item_fields: 
-            - title
-            - description
-            - genres
-            - description
-            - directors
-            - writers
-            - cast
-          type: hugging_face
-    search: 
-      item_fields: 
-        - title
-        - description
-        - genres
-        - description
-        - directors
-        - writers
-        - cast
+name: movielens_recommendations_and_search
+
+data:
+  item_table:
+    type: query
+    query: select item_id as item_id, toDateTimeOrNull(release_date) AS release_datetime, cast, genres, imdbId, writers, directors, interests, poster_url, description, movie_title from movielens_items_enriched order by release_datetime asc
+
+  interaction_table:
+    type: query
+    query: SELECT r.user_id as user_id, r.item_id as item_id, r.timestamp AS created_at, r.label AS label FROM movielens_ratings_2018 r
+
+  schema_override: 
+    item:
+      id: item_id
+      features:
+        - name: poster_url
+          type: Image
+
+index:
+  embeddings:
+    - name: item_content_embedding
+      encoder:
+        type: hugging_face
+        model_name: Alibaba-NLP/gte-modernbert-base
+        item_fields:
+          - movie_title
+          - description
+          - cast
+          - genres
+          - writers
+          - directors
+          - interests
+    - name: poster_embedding
+      encoder:
+        type: hugging_face
+        model_name: openai/clip-vit-base-patch32
+        item_fields:
+          - poster_url
+
+  lexical_search:
+    item_fields:
+      - movie_title
+      - description
+      - cast
+      - genres
+      - writers
+      - directors
+      - interests
